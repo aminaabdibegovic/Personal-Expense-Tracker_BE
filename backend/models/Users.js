@@ -1,9 +1,9 @@
-
 const Sequelize = require('sequelize');
+const sequelize = require('../config/db'); // Import konekcije
 
-const sequelize = new Sequelize('PExpenseT', 'postgres' ,'amina3011', {
-    dialect : 'postgres'
-})
+//const sequelize = new Sequelize('PExpenseT', 'postgres' ,'amina3011', {
+  //  dialect : 'postgres'
+//})
 const Users = sequelize.define('Users', {
     id: {
         type: Sequelize.DataTypes.INTEGER,   
@@ -13,22 +13,22 @@ const Users = sequelize.define('Users', {
     username:{
         type: Sequelize.DataTypes.STRING(50),
         allowNull: false,
-        unique: true,
+        unique : true , 
     },
     email:{
         type: Sequelize.DataTypes.STRING(100),
         allowNull: false,
-        unique: true,
+        unique : true , 
     },
     password:{
         type: Sequelize.DataTypes.STRING(255),
         allowNull: false,
+        unique : true , 
     },
     created_at: {
         type: Sequelize.DataTypes.DATE, 
         defaultValue: Sequelize.DataTypes.NOW, 
         allowNull: false,
-      },
-    });
+  }});
 
  module.exports=Users;

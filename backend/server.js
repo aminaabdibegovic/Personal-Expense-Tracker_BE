@@ -1,37 +1,36 @@
-const Users = require('./models/Users'); // Import User modela
+const Users = require('./models/Users'); 
 const Expenses = require('./models/Expenses');
 const express = require('express');
 
-//connection check
-/*sequelize.authenticate().then(() => {
-    console.log("Connection successful!");
-}).catch((err) => {
-    console.log("Error connection to database!");
-});
 
-console.log("Next task");
-*/
 const app = express();
-// Ruta za ispisivanje "Hello World"
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-// Pokretanje servera
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${3000}`);
-});
+app.use(express.json());
 
 
-Users.sync().then((data) => {
-     console.log("Table Users successfulyy created.");
-  }).catch((err) => {
-    console.log("Something went wrong");
-});
+const port = 3000;
 
-Expenses.sync().then((data) => {
-  console.log("Table Expenses successfulyy created.");
-}).catch((err) => {
- console.log("Something went wrong");
-});
+const startServer = async () => {
+  try {
+    await Users.sync();
+    console.log("Table Users successfully created.");
+    await Expenses.sync();
+    console.log("Table Expenses successfully created.");
+    
+    //running server
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${port}`);
+    });
+  } catch (err) {
+    console.log("Something went wrong:", err.message);
+  }
+};
+
+startServer();
+
+const loginRouter = require('./routes/login');
+const registracijaRouter = require('./routes/register');
+
+app.use('/login', loginRouter);
+app.use('/register', registracijaRouter);
+
+module.exports = app; 

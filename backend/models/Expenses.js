@@ -1,9 +1,10 @@
 const Sequelize = require('sequelize');
 const Users = require('./Users')
+const sequelize = require('../config/db'); // Import konekcije
 
-const sequelize = new Sequelize('PExpenseT', 'postgres' ,'amina3011', {
-    dialect : 'postgres'
-})
+//const sequelize = new Sequelize('PExpenseT', 'postgres' ,'amina3011', {
+  //  dialect : 'postgres'
+//})
 
 const Expenses = sequelize.define('Expenses',{
     id:{
