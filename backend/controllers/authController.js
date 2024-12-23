@@ -6,8 +6,8 @@ const User = require('../models/Users');
 const salt = bcrypt.genSaltSync(10);
 
 // Register function
-const registerUser = async (username, email, password) => {
-  const { error } = registerValidation({ username, email, password });
+const registerUser = async (email, username, password) => {
+  const {error}  = registerValidation({email, username, password });
   if (error) {
     const errorMessages = error.details.map((err) => {
       switch (err.context.key) {
@@ -26,27 +26,29 @@ const registerUser = async (username, email, password) => {
           return 'Invalid input';
       }
     });
-    throw new Error(errorMessages.join(', '));
+    throw new Error(errorMessages.join(';'));
+    //  return res.status(400).json({ errors: errorMessages }); ovo bi trebalo zbog vracanja greski na front
   }
   try {
     const hash = bcrypt.hashSync(password, salt);
-    const user = await User.create({ username, email, password: hash });
+    const user = await User.create({ email, username, password: hash });
     return user;
   } catch (err) {
     throw new Error('Error registering user: ' + err.message);
   }
 };
-
 // Log function 
 const loginUser = async (username,password) => {
   try {
     const user = await User.findOne({ where: { username } });
     if (!user) {
       throw new Error('User not found');
+      //return ('User not found');
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
        throw new Error('Invalid password');
+       //return ('Invalid password');
     }
     const token = jwt.sign(
       { id: user.id, username: user.username },

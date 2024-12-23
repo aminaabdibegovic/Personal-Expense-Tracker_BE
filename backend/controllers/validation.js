@@ -8,4 +8,16 @@ const registerValidation = (data) =>{
     })
     return schema.validate(data);
 }
-module.exports = {registerValidation};
+
+const expenseValidation = (data) =>{
+    const schema = joi.object({
+        title: joi.string().regex(/^[a-zA-Z]+$/).required(),
+        amount: joi.number()
+        .precision(2)  
+        .required(),
+        category: joi.string().regex(/^[a-zA-Z]+$/).required(),
+        expenseDate: joi.date().iso().required()
+    })
+}
+
+module.exports = {registerValidation, expenseValidation};

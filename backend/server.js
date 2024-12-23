@@ -1,10 +1,12 @@
 const Users = require('./models/Users'); 
 const Expenses = require('./models/Expenses');
 const express = require('express');
+const cookieParser = require('cookie-parser');
 
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser()); // da bi mi cookie bio dostupan svugdje
 
 
 const port = 3000;
@@ -29,8 +31,10 @@ startServer();
 
 const loginRouter = require('./routes/login');
 const registracijaRouter = require('./routes/register');
+const expenseRouter = require('./routes/expense');
 
 app.use('/login', loginRouter);
 app.use('/register', registracijaRouter);
+app.use('/expense', expenseRouter);
 
 module.exports = app; 

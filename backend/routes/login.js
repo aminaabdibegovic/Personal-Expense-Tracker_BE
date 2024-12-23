@@ -5,7 +5,7 @@ const {loginUser} = require('../controllers/authController');
 
 
 router.post('/', async(req,res) =>{
-    const { username, password } = req.body;
+    const {username, password } = req.body;
     try {
       const token = await loginUser(username, password);
       res.cookie('token', token, {
