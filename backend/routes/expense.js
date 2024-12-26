@@ -13,7 +13,6 @@ router.post('/createexpense', async(req, res) => {
       if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
      }
-
       const decoded = jwt.verify(token,process.env.JWT_SECRET ); 
       const user_id = decoded.id;
       const expense = await createExpense(user_id,title,amount,category,expense_date);
@@ -27,7 +26,8 @@ router.post('/createexpense', async(req, res) => {
 router.get('/listAllExpenses', async(req, res) => {
    try{
       const token = req.cookies.token;
-
+      console.log("Token:", token);  
+       
       if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
      }
@@ -43,11 +43,17 @@ router.get('/listAllExpenses', async(req, res) => {
 });
 
 router.put('/update/:id', async (req, res) =>{
-   const id = parseInt(req.params.id); // 
-   const values = req.body;
-   try{
-     const updatedRows = await updateExpense(id,values);
-     if (updatedRows > 0) {
+    const id = parseInt(req.params.id); 
+    const values = req.body;
+    try{
+    const token = req.cookies.token;
+    console.log("Token:", token);  
+     
+    if (!token) {
+    return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+    const updatedRows = await updateExpense(id,values);
+    if (updatedRows > 0) {
       return res.status(200).json({ message: 'Expense successfully updated' });
     } else {
       return res.status(404).json({ message: 'Expense not found' });
@@ -60,7 +66,13 @@ router.put('/update/:id', async (req, res) =>{
 router.delete('/delete/:id', async (req, res) =>{
       const id = parseInt(req.params.id); 
       try{
-         const deletedExpense = await deleteExpense(id);
+         const token = req.cookies.token;
+         console.log("Token:", token);  
+     
+        if (!token) {
+           return res.status(401).json({ message: 'No token, authorization denied' });
+        }
+        const deletedExpense = await deleteExpense(id);
          if (deletedExpense > 0) {
             res.status(200).json({ message: 'Expense deleted successfully' });
           } else {

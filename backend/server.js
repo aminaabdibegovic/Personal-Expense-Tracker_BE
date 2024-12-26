@@ -2,14 +2,21 @@ const Users = require('./models/Users');
 const Expenses = require('./models/Expenses');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 
 
+const corsOptions = {
+  origin: 'http://localhost:3000', 
+  credentials: true,
+};
 const app = express();
+
+app.use(cors(corsOptions)); 
+
 app.use(express.json());
 app.use(cookieParser()); // da bi mi cookie bio dostupan svugdje
 
-
-const port = 3000;
+const port = 5000;
 
 const startServer = async () => {
   try {
@@ -32,9 +39,12 @@ startServer();
 const loginRouter = require('./routes/login');
 const registracijaRouter = require('./routes/register');
 const expenseRouter = require('./routes/expense');
+const logout = require('./routes/logout');
+
 
 app.use('/login', loginRouter);
 app.use('/register', registracijaRouter);
 app.use('/expense', expenseRouter);
+app.use('/logout', logout);
 
 module.exports = app; 

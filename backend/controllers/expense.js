@@ -3,7 +3,7 @@ const Expense = require('../models/Expenses');
 
 
 const createExpense = async (user_id,title,amount,category,expense_date) => {
-      const error = expenseValidation({user_id,title,amount,category,expense_date});
+      const {error, value} = expenseValidation({user_id,title,amount,category,expense_date});
       if (error){
         const errorMessages = error.details.map((err) => {
             switch (err.context.key) {
@@ -18,10 +18,10 @@ const createExpense = async (user_id,title,amount,category,expense_date) => {
                 default:
                   return 'Invalid input';
               }
-        })
-        throw new Error(errorMessages.join(';'));
-      }
+        })}
+       else { console.log('validacija uspjesna')};
       try{
+
          const expense = await Expense.create({user_id,title,amount,category,expense_date});
          return expense;
         } catch (err) {
@@ -32,6 +32,7 @@ const createExpense = async (user_id,title,amount,category,expense_date) => {
 const ListAllExpenses = async (id) => {
      try{
         const expenses = await Expense.findAll({ where: {user_id : id } });
+        console.log("Expenses:", expenses);  // Provjeri vraćene troškove
         return  expenses;
      }catch(err){
         throw new Error('Error listing all expense : ' + err.message);
