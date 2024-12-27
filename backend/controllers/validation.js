@@ -6,10 +6,10 @@ const registerValidation = (data) =>{
        email: joi.string().email().required(),
        password: joi.string().min(8).max(15).required()
     })
-    const { error, value } = schema.validate(data, { abortEarly: false }); // `abortEarly: false` prikazuje sve greške odjednom
+    const { error, value } = schema.validate(data, { abortEarly: false }); // da prikaze sve greške odjednom
   
     if (error) {
-      console.error("Validation error:", error.details); // Ispisuje sve detalje o grešci
+      console.error("Validation error:", error.details); // ispisuje mi sve detalje o grešci
       return { error };
     }
   
@@ -54,10 +54,10 @@ const expenseValidation = (data) => {
         }),
     });
   
-    const { error, value } = schema.validate(data, { abortEarly: false }); // `abortEarly: false` prikazuje sve greške odjednom
+    const { error, value } = schema.validate(data, { abortEarly: false }); 
   
     if (error) {
-      console.error("Validation error:", error.details); // Ispisuje sve detalje o grešci
+      console.error("Validation error:", error.details); 
       return { error };
     }
   

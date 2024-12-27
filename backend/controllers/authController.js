@@ -27,7 +27,7 @@ const registerUser = async (email, username, password) => {
       }
     });
     throw new Error(errorMessages.join(';'));
-    //  return res.status(400).json({ errors: errorMessages }); ovo bi trebalo zbog vracanja greski na front
+    //  return res.status(400).json({ errors: errorMessages }); ovo bi trebalo zbog vracanja greski na front?
   }
   try {
     const hash = bcrypt.hashSync(password, salt);
@@ -43,12 +43,10 @@ const loginUser = async (username,password) => {
     const user = await User.findOne({ where: { username } });
     if (!user) {
       throw new Error('User not found');
-      //return ('User not found');
     }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
        throw new Error('Invalid password');
-       //return ('Invalid password');
     }
     const token = jwt.sign(
       { id: user.id, username: user.username },

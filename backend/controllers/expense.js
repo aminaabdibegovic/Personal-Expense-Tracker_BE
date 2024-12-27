@@ -19,9 +19,8 @@ const createExpense = async (user_id,title,amount,category,expense_date) => {
                   return 'Invalid input';
               }
         })}
-       else { console.log('validacija uspjesna')};
+       else { console.log('Validation successful')};
       try{
-
          const expense = await Expense.create({user_id,title,amount,category,expense_date});
          return expense;
         } catch (err) {
@@ -32,7 +31,7 @@ const createExpense = async (user_id,title,amount,category,expense_date) => {
 const ListAllExpenses = async (id) => {
      try{
         const expenses = await Expense.findAll({ where: {user_id : id } });
-        console.log("Expenses:", expenses);  // Provjeri vraćene troškove
+        console.log("Expenses:", expenses);  
         return  expenses;
      }catch(err){
         throw new Error('Error listing all expense : ' + err.message);
