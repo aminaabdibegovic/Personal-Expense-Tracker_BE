@@ -1,5 +1,6 @@
 const { expenseValidation } = require('./validation');
 const Expense = require('../models/Expenses'); 
+const { Op } = require('sequelize');
 
 
 const createExpense = async (user_id,title,amount,category,expense_date) => {
@@ -28,14 +29,44 @@ const createExpense = async (user_id,title,amount,category,expense_date) => {
         }
 };
 
-const ListAllExpenses = async (id) => {
+const ListAllExpenses = async (id,startDate,endDate,category) => {
+      const where = {user_id :id};
+      console.log(startDate,endDate);
+      if (startDate || endDate) {
+        where.expense_date = {}; 
+      }
+      console.log(startDate,endDate,category);
+      if (startDate) {
+        where.expense_date[Op.gte] = startDate; 
+      }
+      if (endDate) {
+        where.expense_date[Op.lte] = endDate; 
+      }
+      if (category) {
+        where.category = category; 
+      }
      try{
-        const expenses = await Expense.findAll({ where: {user_id : id } });
-        console.log("Expenses:", expenses);  
+        const expenses = await Expense.findAll({ where });
         return  expenses;
      }catch(err){
         throw new Error('Error listing all expense : ' + err.message);
      }
+};
+
+const getExpenseCategories = async(id) => {
+     try {
+        const categories = await Expense.findAll({
+            attributes: ['category'], 
+            where: {
+                user_id: id 
+              },
+              group: ['category'], 
+          });
+        return categories;
+    }catch (err) {
+        console.error(err);
+        res.status(500).send('Server error');
+    }
 };
 
 const updateExpense = async (id, values) => {
@@ -59,4 +90,4 @@ const deleteExpense = async(id) =>{
     } 
 };
 
-module.exports = { createExpense, ListAllExpenses, deleteExpense, updateExpense};
+module.exports = { createExpense, ListAllExpenses, deleteExpense, updateExpense, getExpenseCategories};

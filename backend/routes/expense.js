@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken'); 
 require('dotenv').config();
-const {createExpense, ListAllExpenses, deleteExpense, updateExpense} = require('../controllers/expense'); 
+const { Op } = require('sequelize');  
+const {createExpense, ListAllExpenses, deleteExpense, updateExpense, getExpenseCategories} = require('../controllers/expense'); 
 
 
 router.post('/createexpense', async(req, res) => {
@@ -23,18 +24,33 @@ router.post('/createexpense', async(req, res) => {
      }
 });
 
-router.get('/listAllExpenses', async(req, res) => {
+router.get('/getExpenseCategories', async(req,res) => {
    try{
       const token = req.cookies.token;
       console.log("Token:", token);  
        
       if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
-     }
+   }
+   const decoded = jwt.verify(token,process.env.JWT_SECRET ); 
+   const user_id = decoded.id;
+   const categories = await getExpenseCategories(user_id);
+   res.status(201).json(categories);
+   }catch(err){
+      return res.status(500).json({ message: 'Error getting expense categories', error: err.message });
+   }
+})
 
+router.get('/listAllExpenses', async(req, res) => {
+   try{
+      const token = req.cookies.token;
+      const {startDate, endDate,selectedCategory} = req.query; 
+      if (!token) {
+      return res.status(401).json({ message: 'No token, authorization denied' });
+     }
       const decoded = jwt.verify(token,process.env.JWT_SECRET ); 
       const user_id = decoded.id;
-      const expense = await ListAllExpenses(user_id);
+      const expense = await ListAllExpenses(user_id,startDate,endDate,selectedCategory);
       res.status(201).json(expense); 
    }
    catch(err){
