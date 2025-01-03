@@ -3,7 +3,9 @@ const router = express.Router();
 const jwt = require('jsonwebtoken'); 
 require('dotenv').config();
 const { Op } = require('sequelize');  
-const {createExpense, ListAllExpenses, deleteExpense, updateExpense, getExpenseCategories} = require('../controllers/expense'); 
+const {createExpense, ListAllExpenses, deleteExpense, updateExpense, getExpenseCategories, totalSumByCategory, 
+   totalSumByMonth, getMonthsFromExpenseDate, getYearsFromExpenseDate} = require('../controllers/expense'); 
+const { cp } = require('fs');
 
 
 router.post('/createexpense', async(req, res) => {
@@ -98,4 +100,66 @@ router.delete('/delete/:id', async (req, res) =>{
         res.status(500).json({ error: 'Error deleting expense: ' + err.message });
     }
 });
+
+router.get('/getTotalSumByCategory', async(req,res) => {
+   try{
+      const token = req.cookies.token;
+      if(!token)
+         return res.status(401).json({message:'No token, authorization denied'});
+      const decoded = jwt.verify(token,process.env.JWT_SECRET ); 
+      const user_id = decoded.id;
+      const {year,month} = req.query;
+      const {categories,amounts} = await totalSumByCategory(user_id,year,month);
+      return res.status(200).json({ categories, amounts });
+   }catch(err){
+      return res.status(500).json({ message: err.message });
+   }
+ })
+
+ router.get('/getTotalSumByMonth', async(req,res) => {
+    try{
+      const token = req.cookies.token;
+      if(!token) 
+         return res.status(401).json({message:'No token, authorization denied'});
+      const decoded = jwt.verify(token,process.env.JWT_SECRET); 
+      const user_id = decoded.id;
+      const {year} = req.query; //here error was
+      const {months,amounts} = await totalSumByMonth(user_id,year);
+      return res.status(200).json({months,amounts});
+    }
+    catch(err){
+    return err ;
+    }
+ })
+
+ router.get('/getYearsFromExpenseDate', async(req,res)=>{
+   try{
+      const token = req.cookies.token;
+      if(!token)
+         return res.status(401)({message: 'No token, authorization denied'})
+      const decoded = jwt.verify(token,process.env.JWT_SECRET); 
+      const user_id = decoded.id;
+      const response = await getYearsFromExpenseDate(user_id);
+      return res.status(200).json(response);
+   }
+   catch(err){
+      return err;
+   }
+ })
+
+ router.get('/getMonthsFromExpenseDate', async(req,res)=>{
+   try{
+      const token = req.cookies.token;
+      if(!token)
+         return res.status(401)({message: 'No token, authorization denied'})
+      const decoded = jwt.verify(token,process.env.JWT_SECRET); 
+      const user_id = decoded.id;
+      const response = await getMonthsFromExpenseDate(user_id);
+      return res.status(200).json(response); 
+   }
+   catch(err){
+      return err;
+   }
+ })
+
 module.exports = router;
