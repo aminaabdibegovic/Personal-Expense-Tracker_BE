@@ -59,4 +59,13 @@ const loginUser = async (username,password) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+const getUsername = async(id) => {
+  console.log("finding username")
+  const username = await User.findOne({ where: { id } });
+  if(!username) 
+      throw Error('User with this id isn`t found')
+  return username;
+}
+
+module.exports = { registerUser, loginUser,getUsername };
+

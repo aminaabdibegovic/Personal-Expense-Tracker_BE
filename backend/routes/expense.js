@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Op } = require('sequelize');  
 const {createExpense, ListAllExpenses, deleteExpense, updateExpense, getExpenseCategories, totalSumByCategory, 
-   totalSumByMonth, getMonthsFromExpenseDate, getYearsFromExpenseDate} = require('../controllers/expense'); 
+   totalSumByMonth, getMonthsFromExpenseDate, getYearsFromExpenseDate, getSumThisMonth} = require('../controllers/expense'); 
 const { cp } = require('fs');
 
 
@@ -29,7 +29,6 @@ router.post('/createexpense', async(req, res) => {
 router.get('/getExpenseCategories', async(req,res) => {
    try{
       const token = req.cookies.token;
-      console.log("Token:", token);  
        
       if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
@@ -65,7 +64,6 @@ router.put('/update/:id', async (req, res) =>{
     const values = req.body;
     try{
     const token = req.cookies.token;
-    console.log("Token:", token);  
      
     if (!token) {
     return res.status(401).json({ message: 'No token, authorization denied' });
@@ -85,7 +83,6 @@ router.delete('/delete/:id', async (req, res) =>{
       const id = parseInt(req.params.id); 
       try{
          const token = req.cookies.token;
-         console.log("Token:", token);  
      
         if (!token) {
            return res.status(401).json({ message: 'No token, authorization denied' });
@@ -161,5 +158,22 @@ router.get('/getTotalSumByCategory', async(req,res) => {
       return err;
    }
  })
+
+router.get('/getSumThisMonth', async (req,res) => {
+   try{
+      const token = req.cookies.token;
+      if(!token) 
+         return res.status(401)({message:'No token,authorization denied'})
+      const decoded = jwt.verify(token,process.env.JWT_SECRET);
+      const user_id = decoded.id;
+      const {month} = req.query;
+      const sum = await getSumThisMonth(user_id,month);
+      console.log("sum", sum)
+      return res.status(200).json(sum);
+     }
+      catch(err){
+         return err;
+      }
+}) 
 
 module.exports = router;
