@@ -199,7 +199,6 @@ router.get('/getSumThisMonth', async (req,res) => {
       const {month} = req.query;
       const month2 = getMonthNumber(month)
       const sum = await getSumThisMonth(user_id,month2);
-      console.log("sum", sum)
       return res.status(200).json(sum);
      }
       catch(err){

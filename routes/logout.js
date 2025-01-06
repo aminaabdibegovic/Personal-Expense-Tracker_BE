@@ -3,7 +3,6 @@ const router = express.Router();
 
 router.get('/', async (req,res) => {
     try{
-    console.log("ev me")
     res.clearCookie("token");
     return res.status(201).json('Logging out successfuly'); 
     }
