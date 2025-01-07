@@ -1,13 +1,13 @@
-const bcrypt = require('bcryptjs'); 
-const jwt = require('jsonwebtoken'); 
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const { registerValidation } = require('./validation');
-const User = require('../models/Users'); 
+const User = require('../models/Users');
 
 const salt = bcrypt.genSaltSync(10);
 
 // Register function
 const registerUser = async (email, username, password) => {
-  const {error}  = registerValidation({email, username, password });
+  const { error } = registerValidation({ email, username, password });
   if (error) {
     const errorMessages = error.details.map((err) => {
       switch (err.context.key) {
@@ -37,34 +37,29 @@ const registerUser = async (email, username, password) => {
     throw new Error('Error registering user: ' + err.message);
   }
 };
-// Log function 
-const loginUser = async (username,password) => {
-  try {
-    const user = await User.findOne({ where: { username } });
-    if (!user) {
-      throw new Error('User not found');
-    }
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-       throw new Error('Invalid password');
-    }
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
-    return token;}
-    catch(err){
-      throw err;
-    }
+// Log function
+const loginUser = async (username, password) => {
+  const user = await User.findOne({ where: { username } });
+  if (!user) {
+    throw new Error('User not found');
+  }
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new Error('Invalid password');
+  }
+  const token = jwt.sign(
+    { id: user.id, username: user.username },
+    // eslint-disable-next-line no-undef
+    process.env.JWT_SECRET,
+    { expiresIn: '1h' },
+  );
+  return token;
 };
 
-const getUsername = async(id) => {
+const getUsername = async (id) => {
   const user = await User.findOne({ where: { id } });
-  if(!user) 
-      throw Error('User with this id isn`t found')
+  if (!user) throw Error('User with this id isn`t found');
   return user;
-}
+};
 
-module.exports = { registerUser, loginUser,getUsername };
-
+module.exports = { registerUser, loginUser, getUsername };
