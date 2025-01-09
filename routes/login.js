@@ -10,10 +10,10 @@ router.post('/', async (req, res) => {
   try {
     const token = await loginUser(username, password);
     res.cookie('token', token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
-      sameSite: 'strict',
-      maxAge: 3600000,
+      sameSite: 'lax',
+      maxAge: 360000,
     });
     return res.json({ message: 'Login successful', token });
   } catch (err) {

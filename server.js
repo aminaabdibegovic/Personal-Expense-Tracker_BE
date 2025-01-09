@@ -3,6 +3,7 @@ const Expenses = require('./models/Expenses');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+require('dotenv').config();
 
 const corsOptions = {
   origin: 'http://localhost:3000',
