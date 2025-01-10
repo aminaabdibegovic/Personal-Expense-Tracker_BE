@@ -4,8 +4,6 @@ const sequelize = new Sequelize('PExpenseT', 'postgres', 'amina3011', {
   dialect: 'postgres',
 });
 
-//konekcija provjera
-
 sequelize
   .authenticate()
   .then(() => {

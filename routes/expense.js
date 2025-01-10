@@ -194,22 +194,5 @@ router.get('/getMonthsFromExpenseDate', async (req, res) => {
     return err;
   }
 });
-/*
-router.get('/getSumThisMonth', async (req,res) => {
-   try{
-      const token = req.cookies.token;
-      if(!token) 
-         return res.status(401)({message:'No token,authorization denied'})
-      const decoded = jwt.verify(token,process.env.JWT_SECRET);
-      const user_id = decoded.id;
-      const {month} = req.query;
-      const month2 = getMonthNumber(month)
-      const sum = await getSumThisMonth(user_id,month2);
-      return res.status(200).json(sum);
-     }
-      catch(err){
-         return err;
-      }
-}) 
-*/
+
 module.exports = router;

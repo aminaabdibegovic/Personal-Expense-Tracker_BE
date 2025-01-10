@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
       httpOnly: false,
       secure: false,
       sameSite: 'lax',
-      maxAge: 360000,
+      maxAge: 3600000,
     });
     return res.json({ message: 'Login successful', token });
   } catch (err) {
