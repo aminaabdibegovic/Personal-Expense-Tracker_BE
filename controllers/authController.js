@@ -8,11 +8,9 @@ const salt = bcrypt.genSaltSync(10);
 // Register function
 const registerUser = async (email, username, password) => {
   const { error } = registerValidation({ email, username, password });
-
   if (error) {
     const firstError = error.details[0];
     let errorMessage = '';
-
     switch (firstError.context.key) {
       case 'username':
         errorMessage =
@@ -33,7 +31,6 @@ const registerUser = async (email, username, password) => {
       default:
         errorMessage = 'Invalid input.';
     }
-
     throw new Error(errorMessage);
   }
 
@@ -44,7 +41,7 @@ const registerUser = async (email, username, password) => {
 
   try {
     const hash = bcrypt.hashSync(password, salt);
-    const user = await User.create({ email, username, password: hash });
+    const user = await User.create({ email, username, password: hash }); //function create expext object
     return user;
   } catch (err) {
     throw new Error('Error registering user: ' + err.message);

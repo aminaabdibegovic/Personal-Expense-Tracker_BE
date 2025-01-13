@@ -208,7 +208,7 @@ const getSumThisMonth = async (id, month) => {
           ),
           Sequelize.where(
             Sequelize.fn('EXTRACT', Sequelize.literal('YEAR FROM expense_date')),
-            Sequelize.literal('EXTRACT(YEAR FROM NOW())'),
+            Sequelize.literal('EXTRACT(YEAR FROM NOW())'), //literal allows inserting an already sql query directly
           ),
         ],
       },

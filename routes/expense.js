@@ -22,7 +22,6 @@ router.post('/createexpense', async (req, res) => {
     if (!token) {
       return res.status(401).json({ message: 'No token, authorization denied' });
     }
-    // eslint-disable-next-line no-undef
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user_id = decoded.id;
     await createExpense(user_id, title, amount, category, expense_date);

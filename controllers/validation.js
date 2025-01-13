@@ -6,13 +6,12 @@ const registerValidation = (data) => {
     email: joi.string().email().required(),
     password: joi.string().min(8).max(15).required(),
   });
-  const { error, value } = schema.validate(data, { abortEarly: false });
+  const { error, value } = schema.validate(data, { abortEarly: false }); //collects all errors
 
   if (error) {
-    console.error('Validation error:', error.details);
+    console.error('Validation error:', error.details); //validated data
     return { error };
   }
-
   return { value };
 };
 
